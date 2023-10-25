@@ -1,0 +1,51 @@
+/* HomePage.css */
+
+/* Ensuring the HTML and body cover full viewport */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* Setting up the background image */
+body {
+  background-image: url("../static/images/Chat-app.png"); /* Replace with the path to your image */
+  background-size: cover; /* Cover the viewport */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-attachment: fixed; /* Make background image fixed */
+}
+
+/* Styling the header which contains all the links */
+header {
+  display: flex;
+  justify-content: space-around; /* Distribute links horizontally */
+  align-items: center;
+  padding: 10px 50px;
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.5
+  ); /* Semi-transparent black for contrast */
+}
+
+header a {
+  color: #fff; /* White color for links */
+  text-decoration: none;
+  margin: 0 10px;
+  padding: 5px 10px;
+  border-radius: 3px;
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+header a:hover {
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.3
+  ); /* Semi-transparent white on hover */
+}

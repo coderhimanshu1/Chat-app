@@ -1,37 +1,24 @@
-// App.js
-// import React, { useState, useEffect } from "react";
-// import axios from "axios";
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import LoginPage from "./routes/LoginPage";
+import RegisterPage from "./routes/RegisterPage";
+import HomePage from "./routes/HomePage";
+import ChatPage from "./routes/ChatPage";
+import UserSearchPage from "./routes/UserSearchPage";
+import UsersPage from "./routes/UsersPage";
 
 function App() {
-  // const [users, setUsers] = useState([]);
-  // const [messages, setMessages] = useState([]);
-
-  // useEffect(() => {
-  //   axios
-  //     .get("http://localhost:3000/users")
-  //     .then((response) => setUsers(response.data));
-  //   axios
-  //     .get("http://localhost:3000/messages")
-  //     .then((response) => setMessages(response.data));
-  // }, []);
-
   return (
-    <div>
-      <h1>Users</h1>
-      {/* {users.map((user) => (
-        <div key={user.username}>{user.username}</div>
-      ))} */}
-
-      <h1>Messages</h1>
-      {/* {messages.map((message) => (
-        <div key={message.id}>
-          <strong>
-            {message.sender} - {message.receiver}:
-          </strong>
-          {message.message}
-        </div>
-      ))} */}
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/chat/:userId" element={<ChatPage />} />
+        <Route path="/search" element={<UserSearchPage />} />
+        <Route path="/users" element={<UsersPage />} />
+      </Routes>
+    </Router>
   );
 }
 
