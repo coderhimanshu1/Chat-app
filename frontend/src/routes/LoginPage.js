@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { login } from "../api/helpers";
+import { Link } from "react-router-dom";
+import "../style/auth.css";
 
 function LoginPage() {
   const [username, setUsername] = useState("");
@@ -12,10 +14,13 @@ function LoginPage() {
   };
 
   return (
-    <div>
+    <div className="form-container">
       <form onSubmit={handleSubmit}>
+        <p>
+          Don't have account? <Link to="/register">Register Now</Link>
+        </p>
         <input
-          type="text"
+          type="username"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
@@ -26,7 +31,12 @@ function LoginPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit">Login</button>
+        <button className="login-button" type="submit">
+          Login
+        </button>
+        <Link to="/">
+          <p>Go back</p>
+        </Link>
       </form>
     </div>
   );

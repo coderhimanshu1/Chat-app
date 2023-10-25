@@ -6,7 +6,9 @@ function HomePage() {
   return (
     <div className="HomePage">
       <header>
-        <h1>Welcome to ChatApp</h1>
+        <Link to="/">
+          <h1>Chat App</h1>
+        </Link>
         <div className="Homepage-user-links">
           <Link to="/login">Login</Link>
           <Link to="/register">Register</Link>

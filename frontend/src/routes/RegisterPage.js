@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { register } from "../api/helpers"; // Assuming you've added a register function in helpers.
+import "../style/auth.css";
 
 function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -20,10 +21,13 @@ function RegisterPage() {
   };
 
   return (
-    <div>
+    <div className="form-container">
       <form onSubmit={handleSubmit}>
+        <p>
+          Already have account? <Link to="/login">Login Now</Link>
+        </p>
         <input
-          type="text"
+          type="username"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
@@ -40,7 +44,12 @@ function RegisterPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit">Register</button>
+        <button className="register-button" type="submit">
+          Register
+        </button>
+        <Link to="/">
+          <p>Go back</p>
+        </Link>
       </form>
     </div>
   );

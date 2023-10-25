@@ -26,6 +26,16 @@ header {
   margin: 2% 0%;
   padding: 1px 5px;
   background-color: #f6f8ff;
+  transition: text-decoration 0.3s ease;
+}
+
+header a {
+  text-decoration: none;
+  color: #272d2d;
+}
+
+header a:hover {
+  text-decoration: underline;
 }
 
 h1 {
