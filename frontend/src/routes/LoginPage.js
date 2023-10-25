@@ -2,41 +2,68 @@ import React, { useState } from "react";
 import { login } from "../api/helpers";
 import { Link } from "react-router-dom";
 import "../style/auth.css";
+import Alert from "./alert";
 
 function LoginPage() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
+  const [formErrors, setFormErrors] = useState([]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((l) => ({ ...l, [name]: value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await login(username, password);
-    // Handle login response
+    let result = await login(formData);
+    if (result.success) {
+      navigate("/");
+    } else {
+      setFormErrors(result.errors);
+    }
   };
 
   return (
     <div className="form-container">
       <form onSubmit={handleSubmit}>
+        <h1>LOGIN</h1>
         <p>
-          Don't have account? <Link to="/register">Register Now</Link>
+          Don't Have an Account? <Link to="/register">Register</Link>
         </p>
-        <input
-          type="username"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button className="login-button" type="submit">
+        <label>
+          <FontAwesomeIcon icon={faUser} />
+          <input
+            type="username"
+            name="username"
+            placeholder="enter username"
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <label>
+          <FontAwesomeIcon icon={faLock} />
+          <input
+            type="password"
+            name="password"
+            placeholder="enter password"
+            onChange={handleChange}
+            required
+          />
+        </label>
+        {formErrors.length ? (
+          <Alert type="error" messages={formErrors} />
+        ) : null}
+        <button className="login-button" type="submit" value="Log In">
           Login
         </button>
-        <Link to="/">
-          <p>Go back</p>
-        </Link>
+
+        <p>
+          <Link to="/">Go Back</Link>
+        </p>
       </form>
     </div>
   );

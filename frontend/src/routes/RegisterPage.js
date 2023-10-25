@@ -1,55 +1,118 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUser,
+  faLock,
+  faEnvelope,
+  faUserCircle,
+} from "@fortawesome/free-solid-svg-icons";
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { register } from "../api/helpers"; // Assuming you've added a register function in helpers.
 import "../style/auth.css";
 
 function RegisterPage() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+  });
+  const [formErrors, setFormErrors] = useState([]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((l) => ({ ...l, [name]: value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await register(username, email, password);
-    // Handle registration response. If successful, redirect to home.
-    if (response.success) {
-      navigate("/home");
+    let result = await register(formData);
+    if (!result) return <div>loading...</div>;
+    if (result.success) {
+      navigate("/");
     } else {
-      // Handle errors or show messages.
+      setFormErrors(result.errors);
     }
   };
 
   return (
     <div className="form-container">
       <form onSubmit={handleSubmit}>
+        <h1>GET STARTED!</h1>
         <p>
-          Already have account? <Link to="/login">Login Now</Link>
+          Already Have an Account? <Link to="/login">Login</Link>
         </p>
-        <input
-          type="username"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button className="register-button" type="submit">
-          Register
+        <label>
+          <FontAwesomeIcon icon={faUser} />
+          <input
+            type="firstName"
+            name="firstName"
+            placeholder="enter first name"
+            value={formData.firstName}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <label>
+          <FontAwesomeIcon icon={faUser} />
+          <input
+            type="lastName"
+            name="lastName"
+            placeholder="enter last name"
+            value={formData.lastName}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <label>
+          <FontAwesomeIcon icon={faUserCircle} />
+          <input
+            type="username"
+            name="username"
+            placeholder="enter username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <label>
+          <FontAwesomeIcon icon={faEnvelope} />
+          <input
+            type="email"
+            name="email"
+            placeholder="enter email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <label>
+          <FontAwesomeIcon icon={faLock} />
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            placeholder="enter password "
+            onChange={handleChange}
+            required
+          />
+        </label>
+        {formErrors.length ? (
+          <Alert type="error" messages={formErrors} />
+        ) : null}
+        <button
+          className="register-button"
+          type="submit"
+          value="Register"
+          onClick={register}
+        >
+          Sign Up
         </button>
-        <Link to="/">
-          <p>Go back</p>
-        </Link>
+        <p>
+          <Link to="/">Go Back</Link>
+        </p>
       </form>
     </div>
   );
