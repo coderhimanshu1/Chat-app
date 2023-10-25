@@ -1,61 +1,42 @@
-// app.js
+"use strict";
+
+/** Express app for remplr. */
+
 const express = require("express");
-const bodyParser = require("body-parser");
-const pg = require("pg");
+const cors = require("cors");
+
+const { NotFoundError } = require("./expressError");
+
+const { authenticateJWT } = require("./middleware/auth");
+const authRoutes = require("./routes/auth");
+const usersRoutes = require("./routes/users");
+
+const morgan = require("morgan");
 
 const app = express();
-const port = 3000;
 
-const connectionString = "YOUR_POSTGRES_CONNECTION_STRING"; // Replace with your connection string
-const client = new pg.Client(connectionString);
-client.connect();
+app.use(cors());
+app.use(express.json());
+app.use(morgan("tiny"));
+app.use(authenticateJWT);
 
-app.use(bodyParser.json());
+app.use("/auth", authRoutes);
+app.use("/users", usersRoutes);
 
-// <<<< Routes >>>>
-
-// Create an account
-app.post("/createAccount", (req, res) => {
-  const { username, password } = req.body;
-  client.query(
-    "INSERT INTO users(username, password) VALUES($1, $2)",
-    [username, password],
-    (err) => {
-      if (err) return res.status(500).send(err);
-      res.send("Account created!");
-    }
-  );
+/** Handle 404 errors -- this matches everything */
+app.use(function (req, res, next) {
+  return next(new NotFoundError());
 });
 
-// Get all users
-app.get("/users", (req, res) => {
-  client.query("SELECT username FROM users", (err, result) => {
-    if (err) return res.status(500).send(err);
-    res.send(result.rows);
+/** Generic error handler; anything unhandled goes here. */
+app.use(function (err, req, res, next) {
+  if (process.env.NODE_ENV !== "test") console.error(err.stack);
+  const status = err.status || 500;
+  const message = err.message;
+
+  return res.status(status).json({
+    error: { message, status },
   });
 });
 
-// Store a message
-app.post("/message", (req, res) => {
-  const { sender, receiver, message } = req.body;
-  client.query(
-    "INSERT INTO messages(sender, receiver, message) VALUES($1, $2, $3)",
-    [sender, receiver, message],
-    (err) => {
-      if (err) return res.status(500).send(err);
-      res.send("Message stored!");
-    }
-  );
-});
-
-// Get all messages
-app.get("/messages", (req, res) => {
-  client.query("SELECT * FROM messages", (err, result) => {
-    if (err) return res.status(500).send(err);
-    res.send(result.rows);
-  });
-});
-
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+module.exports = app;
